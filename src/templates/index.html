@@ -20,11 +20,16 @@
                     <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
                     <li class="nav-item"><a class="nav-link" href="/feedback">Tus Feedback</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
-                </ul><a class="btn btn-primary ms-md-2" role="button" href="#" style="background: rgb(255,255,255);filter: invert(100%);"><img class="img-fluid" src="{{ url_for('static', filename='img/shopping-bag.png') }}" width="50px"></a>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
-    </nav><img src="{{ url_for('static', filename='img/learning.jpg') }}" style="width: 100%;">
+    </nav>
+    <img src="{{ url_for('static', filename='img/learning.jpg') }}" style="width: 100%;">
     <div class="container">
         <div class="row">
             <div class="col justify-content-center align-items-center align-content-center">

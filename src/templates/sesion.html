@@ -17,11 +17,15 @@
             <div class="collapse navbar-collapse" id="navcol-5">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="cursos.html">Todos los cursos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="profesores.html">Profesores en I-Learning</a></li>
-                    <li class="nav-item"><a class="nav-link" href="feedback.html">Tus Feedback</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="sesion.html">Iniciar Sesión</a></li>
-                </ul><a class="btn btn-primary ms-md-2" role="button" href="#" style="background: rgb(255,255,255);filter: invert(100%);"><img class="img-fluid" src="{{ url_for('static', filename='img/shopping-bag.png') }}" width="50px"></a>
+                    <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/feedback">Tus Feedback</a></li>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
@@ -55,6 +59,7 @@
                                     {% endwith%}
                                     <div class="mb-3"><input class="form-control" type="email" name="emailLog" placeholder="Email" required=""></div>
                                     <div class="mb-3"><input class="form-control" type="password" name="passwordLog" placeholder="Password" required=""></div>
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit" style="background: rgb(182,90,254);">Login</button></div>
                                 </form>
                             </div>
