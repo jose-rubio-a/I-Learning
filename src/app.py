@@ -44,6 +44,7 @@ def perfil():
     return render_template('perfil.html')
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('sesion'))
