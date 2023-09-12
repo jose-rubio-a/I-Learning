@@ -55,8 +55,8 @@ def status_401(error):
 def status_404(error):
     return "<h1>Pagina no encontrada</h1>", 404
 
-@app.route('/sesion', methods=['GET', 'POST'])
-def sesion():
+@app.route('/iniciar_sesion', methods=['POST'])
+def iniciar_sesion():
     if request.method=="POST":
         user=User(id=0, nombre="", email=request.form['emailLog'], password=request.form['passwordLog'])
         logged_user = ModelUser.login(db, user)
@@ -65,13 +65,31 @@ def sesion():
                 login_user(logged_user)
                 return redirect(url_for('index'))
             else:
-                flash("Invalid Password...")
-                return render_template('sesion.html')
+                flash("Contraseña Invalida")
+                return redirect(url_for('sesion'))
         else:
-            flash("User not foud...")
-            return render_template('sesion.html')
+            flash("Usuario no encontrado")
+            return redirect(url_for('sesion'))
     else:
         return render_template('sesion.html')
+    
+@app.route('/crear_usuario', methods=['POST'])
+def crear_usuario():
+    if request.method == "POST":
+        user = User(id=0, nombre=request.form['nombreRegistro'], password=request.form['passwordRegistro'], email=request.form['emailRegistro'])
+        logged_user = ModelUser.create(db,user)
+        if logged_user != None:
+            login_user(logged_user)
+            return redirect(url_for('index'))
+        else:
+            flash("Correo Existente")
+            return redirect(url_for('sesion'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/sesion')
+def sesion():
+    return render_template('sesion.html')
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])
