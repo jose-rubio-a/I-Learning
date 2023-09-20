@@ -2,6 +2,7 @@ from flask import Flask,render_template, url_for, request, flash, redirect
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required
+from forms import RegistroForm
 
 from config import config
 
@@ -43,6 +44,16 @@ def profesores():
 def perfil():
     return render_template('perfil.html')
 
+@app.route('/edit')
+@login_required
+def edit_form():
+    return render_template('editar-perfil.html')
+
+@app.route('/editar_perfil', methods=['POST'])
+@login_required
+def edit_perfil():
+    pass
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -75,21 +86,25 @@ def iniciar_sesion():
     
 @app.route('/crear_usuario', methods=['POST'])
 def crear_usuario():
-    if request.method == "POST":
-        user = User(id=0, nombre=request.form['nombreRegistro'], password=request.form['passwordRegistro'], email=request.form['emailRegistro'])
+    form = RegistroForm()
+    if form.validate_on_submit():
+        user = User(id=0, nombre=form.nombreRegistro.data, password=form.passwordRegistro.data, email=form.emailRegistro.data)
         logged_user = ModelUser.create(db,user)
         if logged_user != None:
             login_user(logged_user)
             return redirect(url_for('index'))
         else:
-            flash("Correo Existente")
+            errors = {'emailRegistro': ['Correo Existente']}
+            flash(errors)
             return redirect(url_for('sesion'))
     else:
-        return redirect(url_for('index'))
+        flash(form.errors)
+        return redirect(url_for('sesion'))
 
 @app.route('/sesion')
 def sesion():
-    return render_template('sesion.html')
+    form = RegistroForm()
+    return render_template('sesion.html', form=form)
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])

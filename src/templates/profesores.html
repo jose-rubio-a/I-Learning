@@ -19,7 +19,6 @@
                     <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
                     <li class="nav-item"><a class="nav-link active" href="/profesores">Profesores en I-Learning</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/feedback">Tus Feedback</a></li>
                     {% if current_user.is_active %}
                         <li class="nav-item"><a class="nav-link" href="/perfil"> {{ current_user.nombre }}</a></li>
                     {% else %}
@@ -56,7 +55,7 @@
             </div>
         </div>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 
 </html>

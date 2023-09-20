@@ -5,31 +5,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Proyecto Modular</title>
-    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpeg') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bs-theme-overrides.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar-Right-Links-Dark-icons.css') }}">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/styles.min.css">
 </head>
 
 <body style="background: rgb(0,0,0);">
     <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
-        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><img src="{{ url_for('static', filename='img/logo.jpeg') }}" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="index.html"><img src="assets/img/logo.jpeg" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-5">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/feedback">Tus Feedback</a></li>
-                    {% if current_user.is_active %}
-                        <li class="nav-item"><a class="nav-link" href="/perfil"> {{ current_user.nombre }}</a></li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
-                    {% endif %}
-                </ul>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cursos.html">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profesores.html">Profesores en I-Learning</a></li>
+                    <li class="nav-item"><a class="nav-link" href="feedback.html">Tus Feedback</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sesion.html">Iniciar Sesión</a></li>
+                </ul><a class="btn btn-primary ms-md-2" role="button" href="#" style="background: rgb(255,255,255);filter: invert(100%);"><img class="img-fluid" src="assets/img/shopping-bag%20(1).png" width="50px"></a>
             </div>
         </div>
     </nav>
-    
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
