@@ -13,3 +13,7 @@ class EditarForm(FlaskForm):
     email = StringField('email', validators=[DataRequired(), Email()])
     password = PasswordField('password', validators=[DataRequired(), Length(min=8, max=15)])
     submit = SubmitField('submit')
+
+class CrearCursoForm(FlaskForm):
+    nombreCurso = StringField('nombreCurso', validators=[DataRequired()])
+    informacionCurso = StringField('informacionCurso', validators=[DataRequired(), Length(min=20, max=255)])

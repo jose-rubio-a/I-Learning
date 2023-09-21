@@ -32,9 +32,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12" style="border-color: var(--bs-secondary-color);">
-                <h2 style="color: var(--bs-dark-bg-subtle);">Nombre del curso:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;" name="nombreCurso" placeholder="Nombre del Curso">
-                <h2 style="color: var(--bs-dark-bg-subtle);margin-top: 20px;">Información del curso:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;" name="informacionCurso" placeholder="Informacion del Curso"></textarea>
-                <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Crear Curso</button>
+                <form method="post" action="/crear_curso/{{ current_user.id }}">
+                    {{ form.hidden_tag() }}
+                    <h2 style="color: var(--bs-dark-bg-subtle);">Nombre del curso:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;" name="nombreCurso" placeholder="Nombre del Curso">
+                    <h2 style="color: var(--bs-dark-bg-subtle);margin-top: 20px;">Información del curso:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;" name="informacionCurso" placeholder="Informacion del Curso"></textarea>
+                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Crear Curso</button>
+                </form>
             </div>
         </div>
     </div>
