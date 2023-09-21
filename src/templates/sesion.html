@@ -45,9 +45,33 @@
                                         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"></path>
                                     </svg></div>
                                 <form class="text-center" method="post" action="/iniciar_sesion">
-                                    <div class="mb-3"><input class="form-control" type="email" name="emailLog" placeholder="Email" required=""></div>
+                                    {{ form.hidden_tag() }}
+                                    <div class="mb-3"><input class="form-control" type="email" name="emailLog" placeholder="Email"></div>
+                                    {% with messages = get_flashed_messages() %}
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                {% if message.emailLog %}
+                                                    <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254);">
+                                                        <strong>{{ message["emailLog"][0] }}</strong>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith%}
                                     <div class="mb-3"><input class="form-control" type="password" name="passwordLog" placeholder="Password" required=""></div>
-                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    {% with messages = get_flashed_messages() %}
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                {% if message.passwordLog %}
+                                                    <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254);">
+                                                        <strong>{{ message["passwordLog"][0] }}</strong>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith%}
                                     <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit" style="background: rgb(182,90,254);">Login</button></div>
                                 </form>
                             </div>

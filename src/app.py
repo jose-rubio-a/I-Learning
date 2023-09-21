@@ -2,7 +2,7 @@ from flask import Flask,render_template, url_for, request, flash, redirect
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required
-from forms import RegistroForm
+from forms import RegistroForm, EditarForm
 
 from config import config
 
@@ -47,12 +47,25 @@ def perfil():
 @app.route('/edit')
 @login_required
 def edit_form():
-    return render_template('editar-perfil.html')
+    form = EditarForm()
+    return render_template('editar-perfil.html', form=form)
 
-@app.route('/editar_perfil', methods=['POST'])
+@app.route('/editar_perfil/<int:user_id>', methods=['POST'])
 @login_required
-def edit_perfil():
-    pass
+def edit_perfil(user_id):
+    form = EditarForm()
+    if form.validate_on_submit():
+        user = User(id=0, nombre=form.nombre.data, password=form.password.data, email=form.email.data)
+        logged_user = ModelUser.edit(db, user, user_id)
+        if logged_user != None:
+            return redirect(url_for('perfil'))
+        else:
+            errors = {'email': ['Correo Existente']}
+            flash(errors)
+            return redirect(url_for('edit_form'))
+    else:
+        flash(form.errors)
+        return redirect(url_for('edit_form'))
 
 @app.route('/logout')
 @login_required
@@ -76,10 +89,12 @@ def iniciar_sesion():
                 login_user(logged_user)
                 return redirect(url_for('index'))
             else:
-                flash("Contraseña Invalida")
+                errors = {'passwordLog': ['Contraseña Invalida']}
+                flash(errors)
                 return redirect(url_for('sesion'))
         else:
-            flash("Usuario no encontrado")
+            errors = {'emailLog': ['Usuario no encontrado']}
+            flash(errors)
             return redirect(url_for('sesion'))
     else:
         return render_template('sesion.html')

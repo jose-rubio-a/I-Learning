@@ -19,7 +19,6 @@
                     <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/feedback">Tus Feedback</a></li>
                     {% if current_user.is_active %}
                         <li class="nav-item"><a class="nav-link" href="/perfil"> {{ current_user.nombre }}</a></li>
                     {% else %}
@@ -34,12 +33,49 @@
         <div class="row">
             <div class="col-md-6 d-lg-flex justify-content-lg-center"><img style="width: 100%;" src="{{ url_for('static', filename='img/logo.jpeg') }}"></div>
             <div class="col-md-6">
-                <form method="post">
+                <form method="post" action="/editar_perfil/{{ current_user.id }}">
+                    {{ form.hidden_tag() }}
                     <h3 style="color: var(--bs-dark-bg-subtle);">Nombre:</h3><input class="form-control" type="text" value="{{ current_user.nombre }}" name="nombre" placeholder="Nombre" style="width: 80%;border-radius: 5px;box-shadow: -1px 1px var(--bs-dark);color: var(--bs-dark-text-emphasis);font-size: 18px;">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.nombre %}
+                                    <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254); width: 80%;">
+                                        <strong>{{ message["nombre"][0] }}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith%}
                     <h3 style="color: var(--bs-dark-bg-subtle);margin-top: 10px;">Correo Electrónico:</h3><input class="form-control" type="email" value="{{ current_user.email }}" style="width: 80%;color: var(--bs-dark-text-emphasis);font-size: 18px;border-radius: 5px;box-shadow: -1px -1px var(--bs-dark);" name="email" placeholder="Correo">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.email %}
+                                    <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254); width: 80%;">
+                                        <strong>{{ message["email"][0] }}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith%}
                     <h3 style="color: var(--bs-dark-bg-subtle);margin-top: 10px;">Contraseña:</h3><input class="form-control" type="password" style="width: 80%;color: var(--bs-dark-text-emphasis);font-size: 18px;border-radius: 5px;box-shadow: -1px -1px var(--bs-dark);" name="password" placeholder="Password">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.password %}
+                                    <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254); width: 80%;">
+                                        <strong>{{ message["password"][0] }}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith%}
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <a class="btn btn-primary" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 40px;font-size: 20px;font-weight: bold;">Editar Perfil</a>
+                    <div class="mb-3"><button class="btn btn-primary d-block" type="submit" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo); margin-top: 30px; width: 80%;font-size: 20px;font-weight: bold;">Editar Perfil</button></div>
                 </form>
             </div>
         </div>

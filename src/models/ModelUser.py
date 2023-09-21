@@ -18,12 +18,28 @@ class ModelUser():
                 return None
         except Exception as ex:
             raise Exception(ex)
+        
+    @classmethod
+    def edit(self, db, user, userId):
+        try:
+            userPrueba = ModelUser.get_by_email(db, user.email)
+            if userPrueba == None or userPrueba.id == userId:
+                cursor = db.connection.cursor()
+                values = (user.nombre, user.email, generate_password_hash(user.password), userId)
+                sql = "UPDATE users SET nombre = %s, email = %s, password = %s WHERE id = %s"
+                cursor.execute(sql, values)
+                db.connection.commit()
+                return user
+            else:
+                return None
+        except Exception as ex:
+            raise Exception(ex)
     
     @classmethod
-    def get_by_email(self, db, user):
+    def get_by_email(self, db, email):
         try:
             cursor = db.connection.cursor()
-            sql = """SELECT id, email, nombre FROM users WHERE email = '{}'""".format(user.email)
+            sql = """SELECT id, email, nombre FROM users WHERE email = '{}'""".format(email)
             cursor.execute(sql)
             row = cursor.fetchone()
             if row != None:
@@ -36,7 +52,7 @@ class ModelUser():
     @classmethod
     def create(self, db, user):
         try:
-            user_email = ModelUser.get_by_email(db, user)
+            user_email = ModelUser.get_by_email(db, user.email)
             if user_email != None:
                 return None
             else:
