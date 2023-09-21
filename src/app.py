@@ -35,6 +35,8 @@ def cursos():
 def feedback():
     return render_template('feedback.html')
 
+@app.route('/crear_curso')
+
 @app.route('/profesores')
 def profesores():
     return render_template('profesores.html')
@@ -44,12 +46,11 @@ def profesores():
 def perfil():
     return render_template('perfil.html')
 
-@app.route('/edit')
+@app.route('/crear_curso')
 @login_required
-def edit_form():
-    form = EditarForm()
-    return render_template('editar-perfil.html', form=form)
 
+
+@app.route('/editar_perfil/', defaults={'user_id': None})
 @app.route('/editar_perfil/<int:user_id>', methods=['POST'])
 @login_required
 def edit_perfil(user_id):
@@ -62,10 +63,10 @@ def edit_perfil(user_id):
         else:
             errors = {'email': ['Correo Existente']}
             flash(errors)
-            return redirect(url_for('edit_form'))
+            return redirect(url_for('edit_perfil'))
     else:
         flash(form.errors)
-        return redirect(url_for('edit_form'))
+        return render_template('editar-perfil.html', form=form)
 
 @app.route('/logout')
 @login_required

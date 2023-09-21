@@ -17,7 +17,7 @@
             <div class="collapse navbar-collapse" id="navcol-5">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cursos">Todos los cursos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
                     {% if current_user.is_active %}
                         <li class="nav-item"><a class="nav-link" href="/perfil"> {{ current_user.nombre }}</a></li>
@@ -28,18 +28,13 @@
             </div>
         </div>
     </nav>
-    <h1 style="color: var(--bs-dark-bg-subtle);text-align: center;">Bienvenido, {{ current_user.nombre }}</h1>
+    <h1 class="text-center" style="color: var(--bs-dark-bg-subtle);font-size: 38.9px;">Crear Curso</h1>
     <div class="container">
         <div class="row">
-            <div class="col-md-6 d-lg-flex justify-content-lg-center"><img style="width: 100%;" src="{{ url_for('static', filename='img/logo.jpeg') }}"></div>
-            <div class="col-md-6">
-                <h3 style="color: var(--bs-dark-bg-subtle);">Nombre:</h3>
-                <h3>{{ current_user.nombre }}</h3>
-                <h3 style="color: var(--bs-dark-bg-subtle);">Correo Electrónico:</h3>
-                <h3>{{ current_user.email }}</h3>
-                <a class="btn btn-primary" href="/editar_perfil" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 40px;font-size: 20px;font-weight: bold;">Editar Perfil</a>
-                <a class="btn btn-primary" href="/logout" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 20px;font-size: 20px;font-weight: bold;">Crear Curso</a>
-                <a class="btn btn-primary" href="/logout" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 20px;font-size: 20px;font-weight: bold;">Cerrar sesión</a>
+            <div class="col-md-12" style="border-color: var(--bs-secondary-color);">
+                <h2 style="color: var(--bs-dark-bg-subtle);">Nombre del curso:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;" name="nombreCurso" placeholder="Nombre del Curso">
+                <h2 style="color: var(--bs-dark-bg-subtle);margin-top: 20px;">Información del curso:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;" name="informacionCurso" placeholder="Informacion del Curso"></textarea>
+                <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Crear Curso</button>
             </div>
         </div>
     </div>
