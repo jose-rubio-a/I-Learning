@@ -17,3 +17,7 @@ class EditarForm(FlaskForm):
 class CrearCursoForm(FlaskForm):
     nombreCurso = StringField('nombreCurso', validators=[DataRequired()])
     informacionCurso = StringField('informacionCurso', validators=[DataRequired(), Length(min=20, max=255)])
+
+class EditarCursoForm(FlaskForm):
+    nombreCurso = StringField('nombreCurso', validators=[DataRequired()])
+    informacionCurso = StringField('informacionCurso', validators=[DataRequired(), Length(min=20, max=255)])

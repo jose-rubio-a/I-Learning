@@ -28,13 +28,13 @@
             </div>
         </div>
     </nav>
-    <h1 class="text-center" style="color: var(--bs-dark-bg-subtle);font-size: 38.9px;">Crear Curso</h1>
+    <h1 class="text-center" style="color: var(--bs-dark-bg-subtle);font-size: 38.9px;">Editar Curso: {{ curso.nombre }}</h1>
     <div class="container">
         <div class="row">
             <div class="col-md-12" style="border-color: var(--bs-secondary-color);">
-                <form method="post" action="/crear_curso/{{ current_user.id }}">
+                <form method="post" action="/cursos/{{ curso.id }}/edit">
                     {{ form.hidden_tag() }}
-                    <h2 style="color: var(--bs-dark-bg-subtle);">Nombre del curso:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;" name="nombreCurso" placeholder="Nombre del Curso">
+                    <h2 style="color: var(--bs-dark-bg-subtle);">Nombre del curso:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;" name="nombreCurso" placeholder="Nombre del Curso" value="{{ curso.nombre }}">
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for message in messages %}
@@ -47,7 +47,7 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith%}
-                    <h2 style="color: var(--bs-dark-bg-subtle);margin-top: 20px;">Información del curso:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;" name="informacionCurso" placeholder="Informacion del Curso"></textarea>
+                    <h2 style="color: var(--bs-dark-bg-subtle);margin-top: 20px;">Información del curso:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;" name="informacionCurso" placeholder="Informacion del Curso">{{ curso.informacion }}</textarea>
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for message in messages %}
@@ -60,7 +60,11 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith%}
-                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Crear Curso</button>
+                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Editar Curso</button>
+                </form>
+                <form method="post" action="/cursos/{{ curso.id }}/delete">
+                    {{ form.hidden_tag() }}
+                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Eliminar Curso</button>
                 </form>
             </div>
         </div>

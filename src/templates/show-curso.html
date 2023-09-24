@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Proyecto Modular</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bs-theme-overrides.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar-Right-Links-Dark-icons.css') }}">
+</head>
+
+<body style="background: rgb(0,0,0);">
+    <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><img src="{{ url_for('static', filename='img/logo.jpeg') }}" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-5">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1 style="color: var(--bs-dark-bg-subtle);text-align: center;">{{ curso.nombre }}</h1>
+    <div class="container">
+        <div class="row d-lg-flex justify-content-lg-center">
+            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                <p style="font-size: 18px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Creado por: {{ user.nombre }}</p>
+            </div>
+            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Fecha de Creación: {{ curso.timecreate }}</p>
+                <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 10px;padding-left: 30px;">Fecha de Modificación: {{ curso.timeupdate }}</p>
+            </div>
+        </div>
+        <div class="row d-lg-flex justify-content-lg-center">
+            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                <p style="font-size: 35px;color: var(--bs-dark-bg-subtle);padding-right: 50px;padding-left: 50px;">{{ curso.informacion }}</p>
+            </div>
+        </div>
+    </div>
+    {% if current_user.id == user.id %}
+    <div class="container py-4 py-xl-5">
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-lg-flex justify-content-lg-center">
+            <div class="col">
+                <div class="card" style="background: rgba(234,230,237,0.72);">
+                    <div class="card-body p-4" style="border-radius: 10px;color: var(--bs-dark-text-emphasis);opacity: 1;">
+                        <h4 class="card-title">¿Quieres modificar el curso?</h4>
+                        <p class="card-text">Modificalo en el siguiente espacio.</p>
+                        <a href="/cursos/{{ curso.id }}/edit" class="btn btn-primary stretched-link" style="background: rgb(182,90,254); border: 0px;">Modificar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="container py-4 py-xl-5">
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-lg-flex justify-content-lg-center">
+            <div class="col">
+                <div class="card" style="background: rgba(234,230,237,0.72);">
+                    <div class="card-body p-4" style="border-radius: 10px;color: var(--bs-dark-text-emphasis);opacity: 1;">
+                        <h4 class="card-title">¿Tienes una opinión?</h4>
+                        <p class="card-text">Deja tu comentario acerca del curso.</p>
+                        <a href="#" class="btn btn-primary stretched-link" style="background: rgb(182,90,254); border: 0px;">Comentar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

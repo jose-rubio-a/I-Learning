@@ -2,7 +2,7 @@ from flask import Flask,render_template, url_for, request, flash, redirect
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required
-from forms import RegistroForm, EditarForm, CrearCursoForm
+from forms import RegistroForm, EditarForm, CrearCursoForm, EditarCursoForm
 
 from config import config
 
@@ -29,6 +29,15 @@ def load_user(id):
 def index():
     return render_template('index.html')
 
+@app.route('/cursos/<int:curso_id>')
+def show_curso(curso_id):
+    curso = ModelCurso.get_by_id(db, curso_id)
+    if curso != None:
+        user = ModelUser.get_by_id(db, curso.user_id)
+        return render_template('show-curso.html', curso=curso, user=user)
+    else:
+        return redirect(url_for('cursos'))
+
 @app.route('/cursos', methods=['POST', 'GET'])
 def cursos():
     row = []
@@ -52,11 +61,32 @@ def perfil():
 def crear_curso(user_id):
     form = CrearCursoForm()
     if form.validate_on_submit():
-        curso = Curso(id=0, user_id=user_id, nombre=form.nombreCurso.data, informacion=form.informacionCurso.data)
+        curso = Curso(id=0, user_id=user_id, nombre=form.nombreCurso.data, informacion=form.informacionCurso.data, timecreate=None, timeupdate=None)
         ModelCurso.create(db, curso)
         return redirect(url_for('perfil'))
     else:
+        flash(form.errors)
         return render_template('crear-curso.html', form=form)
+    
+@app.route('/cursos/<int:curso_id>/edit', methods=['POST', 'GET'])
+@login_required
+def editar_curso(curso_id):
+    form = EditarCursoForm()
+    curso = ModelCurso.get_by_id(db, curso_id)
+    if form.validate_on_submit():
+        cursoEdit = Curso(id=curso_id, user_id=0, nombre=form.nombreCurso.data, informacion=form.informacionCurso.data, timecreate=None, timeupdate=None)
+        curso = ModelCurso.editar_curso(db, cursoEdit)
+        return redirect(url_for('cursos'))
+    else:
+        flash(form.errors)
+        return render_template('edit-curso.html', form=form, curso=curso)
+    
+@app.route('/cursos/<int:curso_id>/delete', methods=['POST'])
+@login_required
+def eliminar_curso(curso_id):
+    ModelCurso.eliminar_curso(db, curso_id)
+    return redirect(url_for('cursos'))
+
 
 @app.route('/editar_perfil/', defaults={'user_id': None})
 @app.route('/editar_perfil/<int:user_id>', methods=['POST'])
