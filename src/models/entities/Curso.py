@@ -7,5 +7,3 @@ class Curso():
         self.user_id = user_id
         self.nombre = nombre
         self.informacion = informacion
-        self.create = datetime.datetime.now()
-        self.update = datetime.datetime.now()

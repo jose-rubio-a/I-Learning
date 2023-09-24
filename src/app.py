@@ -29,16 +29,13 @@ def load_user(id):
 def index():
     return render_template('index.html')
 
-@app.route('/cursos', defaults={'nombre': None})
-@app.route('/cursos/<string:nombre>')
-def cursos(nombre):
-    row = ModelCurso.get_by_name(db, nombre)
-    print(row)
+@app.route('/cursos', methods=['POST', 'GET'])
+def cursos():
+    row = []
+    if request.method == 'POST':
+        nombre = request.form['busqueda']
+        row = ModelCurso.get_by_name(db, nombre)
     return render_template('cursos.html', cursos=row)
-
-@app.route('/feedback')
-def feedback():
-    return render_template('feedback.html')
 
 @app.route('/profesores')
 def profesores():

@@ -1,4 +1,5 @@
 from .entities.Curso import Curso
+import time
 import datetime
 
 class ModelCurso():
@@ -7,8 +8,10 @@ class ModelCurso():
     def create(self, db, curso):
         try:
             cursor = db.connection.cursor()
-            values = (curso.user_id, curso.nombre, curso.informacion)
-            sql = "INSERT INTO cursos (user_id, nombre, informacion) VALUES (%s, %s, %s)"
+            tc = time.time()
+            timecreate = datetime.datetime.fromtimestamp(tc).strftime('%Y-%m-%d %H:%M:%S')
+            values = (curso.user_id, curso.nombre, curso.informacion, timecreate, timecreate)
+            sql = "INSERT INTO cursos (user_id, nombre, informacion, time_create, time_update) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(sql, values)
             db.connection.commit()
         except Exception as ex:
