@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Proyecto Modular</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bs-theme-overrides.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar-Right-Links-Dark-icons.css') }}">
+</head>
+
+<body style="background: rgb(0,0,0);">
+    <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><img src="{{ url_for('static', filename='img/logo.jpeg') }}" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-5">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/profesores">Profesores en I-Learning</a></li>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil/{{ current_user.id }}"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center text-light"><br><span style="color: rgb(var(--color_45)); background-color: transparent;">Un espacio creado&nbsp; y pensado para profesores.</span></h1>
+                <h1 class="text-center text-light"><br><span style="color: rgb(var(--color_45)); background-color: transparent;">Crea clases y exámenes para tus alumnos</span></h1>
+                <p class="text-center text-light"><br><span style="color: rgb(var(--color_15)); background-color: transparent;">Hemos creado este sitio para que los profesores puedan tener conocimiento sobre que les haparecido a los alumnos su clase o curso utilizando "Sentiment Analysis" así como también hemosimplementado un sistema que nos ayuda a detectar el lenguaje en el que fue escrita una opinion.</span><br><br></p>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="width: 100%;">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center text-light"><br><span style="color: rgb(var(--color_45)); background-color: transparent;">Nuestras funcionalidades</span></h1>
+                <h3 class="fw-light text-center text-light"><br><span style="color: rgb(var(--color_15)); background-color: transparent;">Creemos que esta puede ser una herramienta muy poderosa para la retroalimentación de las clases y/o cursos.</span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"><button class="btn btn-primary disabled fs-2 text-center justify-content-center align-content-center" type="button" style="margin-left: 40PX;margin-top: 10PX;background: rgb(213,168,205);height: 75PX;width: 490PX;" disabled="">Resultado de Analisis: POSITIVO</button><button class="btn btn-primary disabled fs-2 text-center justify-content-center align-content-center" type="button" style="margin-left: 40PX;margin-top: 10PX;background: rgb(213,168,205);height: 75PX;width: 490PX;" disabled="">Resultado de Analisis: NEGATIVO</button>
+                <h3 class="fw-light text-center text-light" style="margin-top: 25PX;margin-bottom: 25PX;"><span style="color: rgb(var(--color_45)); background-color: transparent;">Análisis de Sentimiento</span></h3>
+                <p class="text-center text-light" style="width: 50%;margin-left: 25%;"><span style="color: rgb(255, 255, 255);">Esta herramienta analiza las opiniones escritas por los alumnos utilizando Procesamiento de Lenguaje Natural y ofreciendo al profesor una retroalimentación utilizando un sistema con Análisis de Sentimientos para saber si su clase tiene reacciones positivas o negativas.</span></p>
+            </div>
+            <div class="col-md-6"><button class="btn btn-primary disabled fs-2 text-center justify-content-center align-content-center" type="button" style="margin-left: 40PX;margin-top: 10PX;background: rgb(213,168,205);height: 75PX;width: 490PX;" disabled="">Idioma de Opinión: INGLES&nbsp;</button><button class="btn btn-primary disabled fs-2 text-center justify-content-center align-content-center" type="button" style="margin-left: 40PX;margin-top: 10PX;background: rgb(213,168,205);height: 75PX;width: 490PX;" disabled="">Idioma de Opinión: ESPAÑOL</button>
+                <h3 class="fw-light text-center text-light" style="margin-top: 25PX;margin-bottom: 25PX;"><span style="color: rgb(var(--color_45)); background-color: transparent;">Detección de Lenguaje</span></h3>
+                <p class="text-center text-light" style="width: 50%;margin-left: 25%;"><span style="color: rgb(255, 255, 255);">Nuestro centro universitario recibe estudiantes extranjeros cada año, es por eso que con esta herramienta queremos dar oportunidad a cada alumno de escribir una opinión sincera en el idioma de su preferencia y nuestra herramienta utiliza Inteligencia Artificial para detectar mas de 50 idiomas.</span></p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

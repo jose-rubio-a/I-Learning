@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Proyecto Modular</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bs-theme-overrides.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar-Right-Links-Dark-icons.css') }}">
+</head>
+
+<body style="background: rgb(0,0,0);">
+    <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><img src="{{ url_for('static', filename='img/logo.jpeg') }}" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-5">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil/{{ current_user.id }}"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1 class="text-center" style="color: var(--bs-dark-bg-subtle);font-size: 38.9px;">Crear Curso</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="border-color: var(--bs-secondary-color);">
+                <form method="post" action="/crear_curso/{{ current_user.id }}">
+                    {{ form.hidden_tag() }}
+                    <h2 style="color: var(--bs-dark-bg-subtle);">Nombre del curso:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;" name="nombreCurso" placeholder="Nombre del Curso">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.nombreCurso %}
+                                    <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254);">
+                                        <strong>{{ message["nombreCurso"][0] }}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith%}
+                    <h2 style="color: var(--bs-dark-bg-subtle);margin-top: 20px;">Información del curso:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;" name="informacionCurso" placeholder="Informacion del Curso"></textarea>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.informacionCurso %}
+                                    <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254);">
+                                        <strong>{{ message["informacionCurso"][0] }}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith%}
+                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Crear Curso</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Proyecto Modular</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bs-theme-overrides.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar-Right-Links-Dark-icons.css') }}">
+</head>
+
+<body style="background: rgb(0,0,0);">
+    <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><img src="{{ url_for('static', filename='img/logo.jpeg') }}" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-5">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil/{{ current_user.id }}"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <img src="{{ url_for('static', filename='img/learning.jpg') }}" style="width: 100%;">
+    <div class="container">
+        <div class="row">
+            <div class="col justify-content-center align-items-center align-content-center">
+                <h1 class="text-center" style="color: rgb(255,255,255);margin-bottom: 0px;height: 70px;"><br><span style="color: rgb(var(--color_45)); background-color: transparent;">MÁS INFORMACIÓN SOBRE I-LEARNING</span><br><br></h1>
+                <h3 style="text-align: center;margin-bottom: 0px;"><br><span style="color: rgb(255, 255, 255);">Somos un espacio creado y pensado para profesores</span><br><br></h3>
+                <p class="text-center justify-content-center align-items-center" style="color: rgb(255,255,255);width: 50%;margin-right: 25%;margin-left: 25%;"><br><span style="color: rgb(var(--color_15)); background-color: transparent;">Hemos creado este sitio para que los profesores puedan tener conocimiento sobre que les haparecido a los alumnos su clase o curso utilizando "Sentiment Analysis" así como también hemosimplementado un sistema que nos ayuda a detectar el lenguaje en el que fue escrita una opinion.</span><br><br></p><a class="btn btn-primary fs-3 fw-light text-center link-dark" role="button" style="background: rgb(51,54,58);margin-left: 350px;" href="/profesores">Conoce nuestras funcionalidades</a>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

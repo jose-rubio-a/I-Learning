@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Proyecto Modular</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bs-theme-overrides.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar-Right-Links-Dark-icons.css') }}">
+</head>
+
+<body style="background: rgb(0,0,0);">
+    <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><img src="{{ url_for('static', filename='img/logo.jpeg') }}" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-5">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil/{{ current_user.id }}"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1 style="margin-left: 10%;"><span style="color: rgb(255, 255, 255); background-color: transparent;">Busca un curso</span></h1>
+    <p style="margin-left: 10%;"><span style="color: rgb(255, 255, 255);">Y comienza a aprender!</span></p>
+    <form action="/cursos" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input class="border rounded" type="text" style="margin-left: 10%;width: 50%;height: 50px;" name="busqueda">
+        <button class="btn btn-primary" type="submit" style="margin-left: 20px;height: 50px;background: rgb(0,0,0);border-radius: 50px;width: 150px;border: 4px solid rgb(255,255,255) ;border-right-width: 5px;border-right-color: rgb(255,255,255);border-left-width: 5px;border-left-color: rgb(255,255,255);">Buscar</button>
+    </form>
+
+    
+    {% if cursos %}
+    <div class="container py-4 py-xl-5">
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
+            {% for element in cursos %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body p-4" style="background: var(--bs-light-border-subtle);border-radius: 10px;color: var(--bs-dark-text-emphasis);">
+                        <h4 class="card-title">{{ element[0] }}</h4>
+                        <p class="card-text" style="color: var(--bs-dark-border-subtle);font-size: 12px;">Fecha de modificacion: {{ element[3] }}</p>
+                        <a href="/cursos/{{ element[4] }}" class="btn btn-primary stretched-link" style="background: rgb(182,90,254); border: 0px;">Mas informacion del Curso</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

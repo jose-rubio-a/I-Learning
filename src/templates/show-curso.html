@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Proyecto Modular</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bs-theme-overrides.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar-Right-Links-Dark-icons.css') }}">
+</head>
+
+<body style="background: rgb(0,0,0);">
+    <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><img src="{{ url_for('static', filename='img/logo.jpeg') }}" style="width: 100px;"></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-5">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cursos">Todos los cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profesores">Profesores en I-Learning</a></li>
+                    {% if current_user.is_active %}
+                        <li class="nav-item"><a class="nav-link" href="/perfil/{{ current_user.id }}"> {{ current_user.nombre }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/sesion">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1 style="color: var(--bs-dark-bg-subtle);text-align: center;">{{ curso.nombre }}</h1>
+    <div class="container">
+        <div class="row d-lg-flex justify-content-lg-center">
+            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                <p style="font-size: 18px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Creado por: {{ user.nombre }}</p>
+            </div>
+            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Fecha de Creación: {{ curso.timecreate }}</p>
+                <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 10px;padding-left: 30px;">Fecha de Modificación: {{ curso.timeupdate }}</p>
+            </div>
+        </div>
+        <div class="row d-lg-flex justify-content-lg-center">
+            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                <p style="font-size: 35px;color: var(--bs-dark-bg-subtle);padding-right: 50px;padding-left: 50px;">{{ curso.informacion }}</p>
+            </div>
+        </div>
+    </div>
+    {% if current_user.id == user.id %}
+    <div class="container py-4 py-xl-5">
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-lg-flex justify-content-lg-center">
+            <div class="col">
+                <div class="card" style="background: rgba(234,230,237,0.72);">
+                    <div class="card-body p-4" style="border-radius: 10px;color: var(--bs-dark-text-emphasis);opacity: 1;">
+                        <h4 class="card-title">¿Quieres modificar el curso?</h4>
+                        <p class="card-text">Modificalo en el siguiente espacio.</p>
+                        <a href="/cursos/{{ curso.id }}/edit" class="btn btn-primary stretched-link" style="background: rgb(182,90,254); border: 0px;">Modificar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="container py-4 py-xl-5">
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-lg-flex justify-content-lg-center">
+            <div class="col">
+                <div class="card" style="background: rgba(234,230,237,0.72);">
+                    <div class="card-body p-4" style="border-radius: 10px;color: var(--bs-dark-text-emphasis);opacity: 1;">
+                        <h4 class="card-title">¿Tienes una opinión?</h4>
+                        <p class="card-text">Deja tu comentario acerca del curso.</p>
+                        <a class="btn btn-primary" href="/feedback/{{ curso.id }}" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 20px;font-size: 20px;font-weight: bold;">Hacer review</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+        {% if reviews %}
+            <div class="container py-4 py-xl-5">
+                {% for element in reviews %}
+                <div class="row">
+                    <div class="col-md-8 col-xl-6 mx-auto p-4">
+                        <div class="d-flex align-items-center align-items-md-start align-items-xl-center">
+                            <div class="bs-icon-xl bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center me-4 d-inline-block bs-icon xl" style="background: var(--bs-purple);">
+                                {% if element[3] == "POSITIVE" %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-emoji-smile">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                                    <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"></path>
+                                </svg>
+                                {% elif element[3] == "NEGATIVE"%}
+                                <svg class="bi bi-emoji-frown" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                                    <path d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"></path>
+                                </svg>
+                                {% endif %}
+                            </div>
+                            <div style="color: var(--bs-dark-bg-subtle);">
+                                <h4>Nombre: {{ element[0] }}</h4>
+                                <h5>Correo: {{ element[1] }}</h5>
+                                <p>{{ element[2] }}</p>
+                                <p>-</p>
+                                <p>Idioma: {{ element[4] }}</p>
+                               
+                            </div>
+                           
+                        </div>
+                        <hr class="my-5" style="color: var(--bs-gray-100);border-width: 4px;">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}   
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>
