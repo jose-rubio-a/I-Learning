@@ -4,7 +4,7 @@ from flask import Flask,render_template, url_for, request, flash, redirect
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required
-from forms import RegistroForm, EditarForm, CrearCursoForm, EditarCursoForm, CrearReviewForm
+from forms import RegistroForm, EditarForm, CrearCursoForm, EditarCursoForm, CrearReviewForm, CrearActividadForm
 
 from config import config
 
@@ -12,11 +12,13 @@ from config import config
 from models.ModelUser import ModelUser
 from models.ModelCurso import ModelCurso
 from models.ModelReview import ModelReview
+from models.ModelActividad import ModelActividad
 
 #Entities
 from models.entities.User import User
 from models.entities.Curso import Curso
 from models.entities.Review import Review
+from models.entities.Actividad import Actividad
 
 
 app = Flask(__name__)
@@ -40,9 +42,20 @@ def show_curso(curso_id):
     if curso != None:
         user = ModelUser.get_by_id(db, curso.user_id)
         reviews = ModelReview.get_table(db, curso_id=curso_id)
-        return render_template('show-curso.html', curso=curso, user=user, reviews=reviews)
+        actividades = ModelActividad.get_actividades(db, curso_id=curso_id)
+        return render_template('show-curso.html', curso=curso, user=user, reviews=reviews, actividades=actividades)
     else:
         return redirect(url_for('cursos'))
+    
+@app.route('/curso/<int:curso_id>/actividad/<int:actividad_id>')
+def show_actividad(actividad_id, curso_id):
+    actividad = ModelActividad.get_actividad_id(db, actividad_id=actividad_id)
+    if actividad != None:
+        curso = ModelCurso.get_by_id(db, curso_id)
+        user = ModelUser.get_by_id(db, curso.user_id)
+        return render_template('show-actividad.html', curso=curso, actividad=actividad, user=user)
+    else:
+        return redirect(url_for('show_curso', curso_id=curso_id))
 
 @app.route('/cursos', methods=['POST', 'GET'])
 def cursos():
@@ -74,6 +87,18 @@ def crear_curso(user_id):
     else:
         flash(form.errors)
         return render_template('crear-curso.html', form=form)
+
+@app.route('/crear_actividad/<int:curso_id>', methods=['POST', 'GET'])
+@login_required
+def crear_actividad(curso_id):
+    form = CrearActividadForm()
+    if form.validate_on_submit():
+        actividad = Actividad(id=0, curso_id=curso_id, nombre=form.nombreActividad.data, texto=form.textoActividad.data, timecreate=None, timeupdate=None)
+        ModelActividad.createActividad(db, actividad=actividad)
+        return redirect(url_for('show_curso', curso_id=curso_id))
+    else:
+        flash(form.errors)
+        return render_template('crear-actividad.html', form=form, curso_id=curso_id)
     
 @app.route('/feedback/<int:curso_id>', methods=['POST', 'GET'])
 def feedback(curso_id):
@@ -125,7 +150,7 @@ def editar_curso(curso_id):
     if form.validate_on_submit():
         cursoEdit = Curso(id=curso_id, user_id=0, nombre=form.nombreCurso.data, informacion=form.informacionCurso.data, timecreate=None, timeupdate=None)
         curso = ModelCurso.editar_curso(db, cursoEdit)
-        return redirect(url_for('cursos'))
+        return redirect(url_for('show_curso', curso_id=curso_id))
     else:
         flash(form.errors)
         return render_template('edit-curso.html', form=form, curso=curso)

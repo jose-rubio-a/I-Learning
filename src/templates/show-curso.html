@@ -28,8 +28,8 @@
             </div>
         </div>
     </nav>
-    <h1 style="color: var(--bs-dark-bg-subtle);text-align: center;">{{ curso.nombre }}</h1>
-    <div class="container">
+    <div class="container" style="background: var(--bs-secondary-color);border-radius: 10px;width: 90%; margin-bottom: 20px;">
+        <h1 style="color: var(--bs-dark-bg-subtle);text-align: center; padding-top: 20px;">{{ curso.nombre }}</h1>
         <div class="row d-lg-flex justify-content-lg-center">
             <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
                 <p style="font-size: 18px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Creado por: {{ user.nombre }}</p>
@@ -41,21 +41,49 @@
         </div>
         <div class="row d-lg-flex justify-content-lg-center">
             <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
-                <p style="font-size: 35px;color: var(--bs-dark-bg-subtle);padding-right: 50px;padding-left: 50px;">{{ curso.informacion }}</p>
+                <p style="font-size: 12px;color: var(--bs-dark-bg-subtle);padding-right: 50px;padding-left: 50px;">{{ curso.informacion }}</p>
             </div>
         </div>
     </div>
-    {% if current_user.id == user.id %}
-    <div class="container py-4 py-xl-5">
-        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-lg-flex justify-content-lg-center">
-            <div class="col">
-                <div class="card" style="background: rgba(234,230,237,0.72);">
-                    <div class="card-body p-4" style="border-radius: 10px;color: var(--bs-dark-text-emphasis);opacity: 1;">
-                        <h4 class="card-title">¿Quieres modificar el curso?</h4>
-                        <p class="card-text">Modificalo en el siguiente espacio.</p>
-                        <a href="/cursos/{{ curso.id }}/edit" class="btn btn-primary stretched-link" style="background: rgb(182,90,254); border: 0px;">Modificar</a>
+    {% if actividades %}
+        {% for actividad in actividades %}
+        <div class="container" style="width: 90%;">
+            <div class="row" style="width: 100%;">
+                <div class="col" style="width: 100%;">
+                    <div class="card" style="background: rgba(152,66,193,0.85);color: var(--bs-dark-bg-subtle);margin: 10px;width: 100%;">
+                        <div class="card-body">
+                            <a style="font-size: 24px; text-decoration: none; font-weight: 500;" class="card-title stretched-link" href="/curso/{{ curso.id }}/actividad/{{ actividad[0] }}">{{ actividad[1] }}</a>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% if current_user.id == user.id %}
+    <div class="container d-flex d-lg-flex justify-content-center justify-content-lg-center align-items-lg-center" style="width: 90%;height: 100px;border-radius: 10px;background: rgba(255,255,255,0.33);  margin-top: 30px;">
+        <div class="row d-lg-flex justify-content-lg-center align-items-lg-center" style="width: 80%;">
+            <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center align-items-lg-center" style="width: 50%;height: 100%;">
+                <a class="btn btn-primary align-items-lg-center" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple); border: 0px;" href="/crear_actividad/{{ curso.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-plus-circle-dotted" style="width: 32px;height: 32px; margin-top: 10px;">
+                        <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path>
+                    </svg>
+                </a>
+            </div>
+            <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center" style="width: 50%;height: 100%;">
+                <a class="btn btn-primary" href="/cursos/{{ curso.id }}/edit" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple); border: 0px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-gear-fill" style="width: 32px;height: 32px; margin-top: 10px;">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
+                    </svg>
+                </a>
+            </div>
+            <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center align-items-lg-center" style="width: 50%;height: 100%;">
+                <a class="btn btn-primary" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple); border: 0px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-clipboard2-fill" style="width: 32px;height: 32px; margin-top: 10px;">
+                        <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5h3Z"></path>
+                        <path d="M3.5 1h.585A1.498 1.498 0 0 0 4 1.5V2a1.5 1.5 0 0 0 1.5 1.5h5A1.5 1.5 0 0 0 12 2v-.5c0-.175-.03-.344-.085-.5h.585A1.5 1.5 0 0 1 14 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-12A1.5 1.5 0 0 1 3.5 1Z"></path>
+                    </svg>
+                </a>
             </div>
         </div>
     </div>

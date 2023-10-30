@@ -28,43 +28,45 @@
             </div>
         </div>
     </nav>
-    <h1 class="text-center" style="color: var(--bs-dark-bg-subtle);font-size: 38.9px;">Crear Curso</h1>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12" style="border-color: var(--bs-secondary-color);">
-                <form method="post" action="/crear_curso/{{ current_user.id }}">
-                    {{ form.hidden_tag() }}
-                    <h2 style="color: var(--bs-dark-bg-subtle);">Nombre del curso:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;" name="nombreCurso" placeholder="Nombre del Curso" value="{{ request.form['nombreCurso'] }}">
+    <div class="container d-lg-flex justify-content-lg-center align-items-lg-center" style="border-radius: 10px;background: var(--bs-purple);color: var(--bs-body-bg);height: 100px;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;">
+        <h1 class="text-center" style="color: var(--bs-body-bg);font-size: 38.9px;">Crear Actividad</h1>
+    </div>
+    <form method="post" action="/crear_actividad/{{ curso_id }}">
+        {{ form.hidden_tag() }}
+        <div class="container" style="background: rgb(255,255,255);border-radius: 10px;border-top-right-radius: 0px;border-top-left-radius: 0px;color: var(--bs-dark);">
+            <div class="row">
+                <div class="col-md-12" style="border-color: var(--bs-secondary-color);padding-bottom: 15px;">
+                    <h2 style="color: var(--bs-dark);">Nombre de la actividad:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;border-color: var(--bs-dark);" name="nombreActividad" placeholder="Nombre de la actividad">
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for message in messages %}
-                                {% if message.nombreCurso %}
+                                {% if message.nombreActividad %}
                                     <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254);">
-                                        <strong>{{ message["nombreCurso"][0] }}</strong>
+                                        <strong>{{ message["nombreActividad"][0] }}</strong>
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
                     {% endwith%}
-                    <h2 style="color: var(--bs-dark-bg-subtle);margin-top: 20px;">Información del curso:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;" name="informacionCurso" placeholder="Informacion del Curso">{{ request.form['informacionCurso'] }}</textarea>
+                    <h2 style="color: var(--bs-dark);margin-top: 20px;">Texto de la actividad:</h2><textarea style="width: 100%;font-size: 18px;height: 100px;color: var(--bs-dark);border-color: var(--bs-dark);" name="textoActividad" placeholder="Texto de la actividad"></textarea>
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for message in messages %}
-                                {% if message.informacionCurso %}
+                                {% if message.textoActividad %}
                                     <div class="alert alert-primary alert-dismissible" role="alert" style="background: rgb(182,90,254);">
-                                        <strong>{{ message["informacionCurso"][0] }}</strong>
+                                        <strong>{{ message["textoActividad"][0] }}</strong>
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
                     {% endwith%}
-                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-indigo);margin-top: 30px;font-size: 20px;">Crear Curso</button>
-                </form>
+                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-purple);margin-top: 30px;font-size: 20px;">Crear Actividad</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 

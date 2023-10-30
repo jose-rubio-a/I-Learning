@@ -26,3 +26,7 @@ class CrearReviewForm(FlaskForm):
     nombre = StringField('nombre', validators=[DataRequired(), Length(max=50)])
     correo = StringField('correo', validators=[DataRequired(), Email()])
     informacion = StringField('informacion', validators=[DataRequired(), Length(min=5, max=255)])
+
+class CrearActividadForm(FlaskForm):
+    nombreActividad = StringField('nombreActividad', validators=[DataRequired()])
+    textoActividad = StringField('textoActividad', validators=[DataRequired(), Length(min=20, max=255)])
