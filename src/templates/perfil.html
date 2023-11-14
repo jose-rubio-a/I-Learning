@@ -39,7 +39,16 @@
                 <h3 style="color: var(--bs-dark-bg-subtle);">Correo Electrónico:</h3>
                 <h3>{{ current_user.email }}</h3>
                 <a class="btn btn-primary" href="/editar_perfil" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 40px;font-size: 20px;font-weight: bold;">Editar Perfil</a>
-                <a class="btn btn-primary" href="/crear_curso" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 20px;font-size: 20px;font-weight: bold;">Crear Curso</a>
+                {% if current_user.profesor == 1%}
+                    <a class="btn btn-primary" href="/crear_curso" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 20px;font-size: 20px;font-weight: bold;">Crear Curso</a>
+                {% else %}
+                    {% if request %}
+                        <form method="post" action="/profesor_request/{{ current_user.id }}">
+                            {{ form.hidden_tag() }}
+                            <button class="btn btn-primary" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 20px;font-size: 20px;font-weight: bold;">Quiero registrarme como profesor</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
                 <a class="btn btn-primary" href="/logout" role="button" style="--bs-body-bg: var(--bs-purple);background: var(--bs-indigo);width: 100%;margin-top: 20px;font-size: 20px;font-weight: bold;">Cerrar sesión</a>
             </div>
         </div>

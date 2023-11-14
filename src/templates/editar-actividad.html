@@ -31,11 +31,11 @@
     <div class="container d-lg-flex justify-content-lg-center align-items-lg-center" style="border-radius: 10px;background: var(--bs-purple);color: var(--bs-body-bg);height: 100px;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;">
         <h1 class="text-center" style="color: var(--bs-body-bg);font-size: 38.9px;">Editar Actividad: {{ actividad.nombre }}</h1>
     </div>
-    <form method="post" action="/editar_actividad/{{ actividad.id }}">
-        {{ form.hidden_tag() }}
-        <div class="container" style="background: rgb(255,255,255);border-radius: 10px;border-top-right-radius: 0px;border-top-left-radius: 0px;color: var(--bs-dark);">
-            <div class="row">
-                <div class="col-md-12" style="border-color: var(--bs-secondary-color);padding-bottom: 15px;">
+    <div class="container" style="background: rgb(255,255,255);border-radius: 10px;border-top-right-radius: 0px;border-top-left-radius: 0px;color: var(--bs-dark);">
+        <div class="row">
+            <div class="col-md-12" style="border-color: var(--bs-secondary-color);padding-bottom: 15px;">
+                <form method="post" action="/actividad/{{ actividad.id }}/edit">
+                    {{ form.hidden_tag() }}
                     <h2 style="color: var(--bs-dark);">Nombre de la actividad:</h2><input class="form-control-sm" type="text" style="width: 30%;margin-top: 5px;border-radius: 7px;box-shadow: -1px 1px var(--bs-dark-border-subtle);font-size: 18px;border-color: var(--bs-dark);" name="nombreActividad" placeholder="Nombre de la actividad" value="{{ actividad.nombre }}">
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
@@ -62,11 +62,15 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith%}
-                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-purple);margin-top: 30px;font-size: 20px;">Editar Actividad</button>
+                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-purple);margin-top: 30px;font-size: 20px; border: 0px;">Editar Actividad</button>
+                </form>
+                <form method="post" action="/actividad/{{ actividad.id }}/delete">
+                    {{ form.hidden_tag() }}
+                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-purple);margin-top: 10px;font-size: 20px; border: 0px;">Eliminar Actividad</button>
+                </form>
                 </div>
             </div>
         </div>
-    </form>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 

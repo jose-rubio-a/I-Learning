@@ -3,8 +3,8 @@ from textblob import TextBlob
 from flask import Flask,render_template, url_for, request, flash, redirect
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager, login_user, logout_user, login_required
-from forms import RegistroForm, EditarForm, CrearCursoForm, EditarCursoForm, CrearReviewForm, CrearActividadForm
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from forms import RegistroForm, EditarForm, CrearCursoForm, EditarCursoForm, CrearReviewForm, CrearActividadForm, EditarActividadForm
 
 from config import config
 
@@ -35,6 +35,13 @@ def load_user(id):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/profesor_request/<int:user_id>', methods=['POST'])
+@login_required
+def profesor_request(user_id):
+    if current_user.id == user_id and ModelUser.not_exist_request(db=db, id=user_id):
+        ModelUser.request_profesor(db=db, id=user_id)
+    return redirect(url_for('perfil', user_id=user_id))
 
 @app.route('/cursos/<int:curso_id>')
 def show_curso(curso_id):
@@ -72,18 +79,22 @@ def profesores():
 @app.route('/perfil/<int:user_id>')
 @login_required
 def perfil(user_id):
-    row = ModelCurso.get_by_user(db, user_id)
-    return render_template('perfil.html', cursos=row)
+    form = RegistroForm()
+    request = ModelUser.not_exist_request(db=db, id=current_user.id)
+    row = ModelCurso.get_by_user(db, current_user.id)
+    return render_template('perfil.html', cursos=row, request=request, form=form)
 
 @app.route('/crear_curso/', defaults={'user_id': None})
 @app.route('/crear_curso/<int:user_id>', methods=['POST'])
 @login_required
 def crear_curso(user_id):
     form = CrearCursoForm() 
-    if form.validate_on_submit():
+    if form.validate_on_submit() and (ModelUser.get_by_id(user_id).profesor == 1):
         curso = Curso(id=0, user_id=user_id, nombre=form.nombreCurso.data, informacion=form.informacionCurso.data, timecreate=None, timeupdate=None)
         ModelCurso.create(db, curso)
         return redirect(url_for('cursos'))
+    elif (current_user.profesor == 0):
+        return redirect(url_for('perfil', user_id=current_user.id))
     else:
         flash(form.errors)
         return render_template('crear-curso.html', form=form)
@@ -92,13 +103,32 @@ def crear_curso(user_id):
 @login_required
 def crear_actividad(curso_id):
     form = CrearActividadForm()
-    if form.validate_on_submit():
+    curso = ModelCurso.get_by_id(db=db, id=curso_id)
+    if form.validate_on_submit() and ( curso.user_id == current_user.id):
         actividad = Actividad(id=0, curso_id=curso_id, nombre=form.nombreActividad.data, texto=form.textoActividad.data, timecreate=None, timeupdate=None)
         ModelActividad.createActividad(db, actividad=actividad)
         return redirect(url_for('show_curso', curso_id=curso_id))
+    elif curso.user_id != current_user.id:
+        return redirect(url_for('cursos'))
     else:
         flash(form.errors)
         return render_template('crear-actividad.html', form=form, curso_id=curso_id)
+
+@app.route('/actividad/<int:actividad_id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_actividad(actividad_id):
+    form = EditarActividadForm()
+    actividad = ModelActividad.get_actividad_id(db=db, actividad_id=actividad_id)
+    curso = ModelCurso.get_by_id(db=db, id=actividad.curso_id)
+    if form.validate_on_submit() and current_user.id == curso.user_id:
+        actividadEdit = Actividad(id=actividad_id, curso_id=actividad.curso_id, nombre=form.nombreActividad.data, texto=form.textoActividad.data, timecreate=None, timeupdate=None)
+        actividad = ModelActividad.editar_actividad(db=db, actividad=actividadEdit)
+        return redirect(url_for('show_actividad', curso_id=curso.id, actividad_id=actividad_id))
+    elif current_user.id != curso.user_id:
+        return redirect(url_for('cursos'))
+    else:
+        flash(form.errors)
+        return render_template('editar-actividad.html', form=form, actividad=actividad)
     
 @app.route('/feedback/<int:curso_id>', methods=['POST', 'GET'])
 def feedback(curso_id):
@@ -147,10 +177,12 @@ def feedback(curso_id):
 def editar_curso(curso_id):
     form = EditarCursoForm()
     curso = ModelCurso.get_by_id(db, curso_id)
-    if form.validate_on_submit():
+    if form.validate_on_submit() and (current_user.id == curso.user_id):
         cursoEdit = Curso(id=curso_id, user_id=0, nombre=form.nombreCurso.data, informacion=form.informacionCurso.data, timecreate=None, timeupdate=None)
         curso = ModelCurso.editar_curso(db, cursoEdit)
         return redirect(url_for('show_curso', curso_id=curso_id))
+    elif (current_user.id != curso.user_id):
+        return redirect(url_for('cursos'))
     else:
         flash(form.errors)
         return render_template('edit-curso.html', form=form, curso=curso)
@@ -158,17 +190,25 @@ def editar_curso(curso_id):
 @app.route('/cursos/<int:curso_id>/delete', methods=['POST'])
 @login_required
 def eliminar_curso(curso_id):
-    ModelCurso.eliminar_curso(db, curso_id)
+    if (current_user.id == ModelCurso.get_by_id(db=db, id=curso_id).user_id):
+        ModelCurso.eliminar_curso(db, curso_id)
     return redirect(url_for('cursos'))
 
+@app.route('/actividad/<int:actividad_id>/delete', methods=['POST'])
+@login_required
+def eliminar_actividad(actividad_id):
+    curso_id = ModelActividad.get_actividad_id(db=db, actividad_id=actividad_id).curso_id
+    if current_user.id == ModelCurso.get_by_id(db=db, id=curso_id).user_id:
+        ModelActividad.eliminar_actividad(db=db, actividad_id=actividad_id)
+    return redirect(url_for('show_curso', curso_id=curso_id))
 
 @app.route('/editar_perfil/', defaults={'user_id': None})
 @app.route('/editar_perfil/<int:user_id>', methods=['POST'])
 @login_required
 def edit_perfil(user_id):
     form = EditarForm()
-    if form.validate_on_submit():
-        user = User(id=0, nombre=form.nombre.data, password=form.password.data, email=form.email.data)
+    if form.validate_on_submit() and (current_user.id == user_id ):
+        user = User(id=0, nombre=form.nombre.data, password=form.password.data, email=form.email.data, profesor=0)
         logged_user = ModelUser.edit(db, user, user_id)
         if logged_user != None:
             return redirect(url_for('perfil', user_id=user_id))
@@ -195,7 +235,7 @@ def status_404(error):
 @app.route('/iniciar_sesion', methods=['POST'])
 def iniciar_sesion():
     if request.method=="POST":
-        user=User(id=0, nombre="", email=request.form['emailLog'], password=request.form['passwordLog'])
+        user=User(id=0, nombre="", email=request.form['emailLog'], password=request.form['passwordLog'], profesor=0)
         logged_user = ModelUser.login(db, user)
         if logged_user != None:
             if logged_user.password:
@@ -216,7 +256,7 @@ def iniciar_sesion():
 def crear_usuario():
     form = RegistroForm()
     if form.validate_on_submit():
-        user = User(id=0, nombre=form.nombreRegistro.data, password=form.passwordRegistro.data, email=form.emailRegistro.data)
+        user = User(id=0, nombre=form.nombreRegistro.data, password=form.passwordRegistro.data, email=form.emailRegistro.data, profesor=0)
         logged_user = ModelUser.create(db,user)
         if logged_user != None:
             login_user(logged_user)

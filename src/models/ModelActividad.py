@@ -32,6 +32,34 @@ class ModelActividad():
             raise Exception(ex)
         
     @classmethod
+    def editar_actividad(self, db, actividad):
+        try:
+            actividadUpdate = ModelActividad.get_actividad_id(db, actividad.id)
+            if actividadUpdate:
+                cursor = db.connection.cursor()
+                tu = time.time()
+                timeupdate = datetime.datetime.fromtimestamp(tu).strftime('%Y-%m-%d %H:%M:%S')
+                values = (actividad.nombre, actividad.texto, timeupdate, actividad.id)
+                sql = "UPDATE actividades SET nombre = %s, texto = %s, time_update = %s WHERE id = %s"
+                cursor.execute(sql, values)
+                db.connection.commit()
+                return actividad
+            else: 
+                return None
+        except Exception as ex:
+            raise Exception(ex)
+        
+    @classmethod
+    def eliminar_actividad(self, db, actividad_id):
+        try:
+            cursor = db.connection.cursor()
+            sql = "DELETE FROM actividades WHERE id = {}".format(actividad_id)
+            cursor.execute(sql)
+            db.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+        
+    @classmethod
     def get_actividad_id(self, db, actividad_id):
         try:
             cursor = db.connection.cursor()
