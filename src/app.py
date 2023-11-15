@@ -60,7 +60,13 @@ def show_actividad(actividad_id, curso_id):
     if actividad != None:
         curso = ModelCurso.get_by_id(db, curso_id)
         user = ModelUser.get_by_id(db, curso.user_id)
-        return render_template('show-actividad.html', curso=curso, actividad=actividad, user=user)
+        actividades = ModelActividad.get_actividades(db, curso_id=curso_id)
+        indice = 0
+        for e in actividades:
+            if e[0] == actividad_id:
+                indice = actividades.index(e)
+                break;
+        return render_template('show-actividad.html', curso=curso, actividad=actividad, user=user, actividades=actividades, indice=indice)
     else:
         return redirect(url_for('show_curso', curso_id=curso_id))
 

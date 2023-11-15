@@ -28,34 +28,88 @@
             </div>
         </div>
     </nav>
-    <div class="container" style="width: 90%;">
-        <h1 style="color: var(--bs-dark-bg-subtle);text-align: center; padding-top: 20px;">{{ actividad.nombre }}</h1>
-        <div class="row d-lg-flex justify-content-lg-center">
-            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
-                <p style="font-size: 18px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Curso de: {{ curso.nombre }}</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div>
+                    <h1 style="color: var(--bs-dark-bg-subtle);text-align: center; padding-top: 20px;">{{ actividad.nombre }}</h1>
+                    <div class="row d-lg-flex justify-content-lg-center">
+                        <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                            <p style="font-size: 18px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Curso de: {{ curso.nombre }}</p>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                            <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Fecha de Creación: {{ actividad.timecreate }}</p>
+                            <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 10px;padding-left: 30px;">Fecha de Modificación: {{ actividad.timeupdate }}</p>
+                        </div>
+                    </div>
+                    <div class="row d-lg-flex justify-content-lg-center">
+                        <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
+                            <p style="font-size: 32px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px; word-wrap: break-word; width: 100%;">{{ actividad.texto }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="container d-flex d-lg-flex justify-content-center justify-content-lg-center align-items-lg-center" style="width: 90%;height: 100px;border-radius: 10px;background: rgba(255,255,255,0.33);  margin-top: 30px;">
+                    <div class="row d-lg-flex justify-content-lg-center align-items-lg-center" style="width: 80%;">
+                        {% if indice > 0 %}
+                        <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center align-items-lg-center" style="width: 50%;height: 100%;">
+                            <a class="btn btn-primary align-items-lg-center" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple); border: 0px;" href="/curso/{{ curso.id }}/actividad/{{ actividades[indice-1][0] }}">
+                                <svg class="bi bi-arrow-left-square" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="width: 32px;height: 32px; margin-top: 10px;">
+                                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if current_user.id == user.id %}
+                        <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center" style="width: 50%;height: 100%;">
+                            <a class="btn btn-primary" href="/actividad/{{ actividad.id }}/edit" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple); border: 0px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-gear-fill" style="width: 32px;height: 32px; margin-top: 10px;">
+                                    <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        {% endif %}
+                        <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center" style="width: 50%;height: 100%;">
+                            <a class="btn btn-primary" href="/cursos/{{ actividad.curso_id }}" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple); border: 0px;">
+                                <svg class="bi bi-card-list" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="width: 32px;height: 32px; margin-top: 10px;">
+                                    <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"></path>
+                                    <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        {% if indice < actividades|length - 1%}
+                        <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center" style="width: 50%;height: 100%;">
+                            <a class="btn btn-primary" href="/curso/{{ curso.id }}/actividad/{{ actividades[indice+1][0] }}" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple); border: 0px;">
+                                <svg class="bi bi-arrow-right-square" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="width: 32px;height: 32px; margin-top: 10px;">
+                                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
-                <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 30px;padding-left: 10px;">Fecha de Creación: {{ actividad.timecreate }}</p>
-                <p style="font-size: 14px;color: var(--bs-dark-bg-subtle);padding-right: 10px;padding-left: 30px;">Fecha de Modificación: {{ actividad.timeupdate }}</p>
-            </div>
-        </div>
-        <div class="row d-lg-flex justify-content-lg-center">
-            <div class="col d-lg-flex justify-content-lg-center" style="width: 70%;">
-                <p style="font-size: 35px;color: var(--bs-dark-bg-subtle);padding-right: 50px;padding-left: 50px;">{{ actividad.texto }}</p>
+            <div class="col-md-4">
+                <div class="list-group list-group-flush border-bottom scrollarea" style="border-radius: 8px;">
+                    <div class="list-group-item list-group-item-action py-3 lh-tight">
+                        <div class="d-flex justify-content-between align-items-center w-100"><strong class="mb-1" style="font-size: 24px;">{{curso.nombre}}</strong></div>
+                    </div>
+                    {% for actividadList in actividades %}
+                    {% if actividadList[0] == actividad.id %}
+                    <a class="list-group-item list-group-item-action active py-3 lh-tight" href="/curso/{{ curso.id }}/actividad/{{ actividadList[0] }}" aria-current="true" style="background-color: blueviolet;">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <strong class="mb-1">{{ actividadList[1] }}</strong>
+                        </div>
+                    </a>
+                    {% else %}
+                    <a class="list-group-item list-group-item-action py-3 lh-tight" href="/curso/{{ curso.id }}/actividad/{{ actividadList[0] }}" style="background-color: rgba(255,255,255,0.83);">
+                        <div class="d-flex justify-content-between align-items-center w-100"><strong class="mb-1">{{ actividadList[1] }}</strong></div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-    {% if current_user.id == user.id %}
-    <div class="row d-lg-flex justify-content-lg-center align-items-lg-center" style="width: 80%;">
-        <div class="col d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center" style="width: 50%;height: 100%;">
-            <a class="btn btn-primary" href="/actividad/{{ actividad.id }}/edit" style="width: 100%;height: auto;min-width: 70px;max-width: 150px;min-height: 70px;margin-top: 15px;max-height: 150px;background: var(--bs-purple);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-gear-fill" style="width: 32px;height: 32px; margin-top: 10px;">
-                    <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
-                </svg>
-            </a>
-        </div>
-    </div>
-    {% endif %}
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 
