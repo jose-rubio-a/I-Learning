@@ -1,10 +1,18 @@
 import boto3
+import pandas as pd
 from textblob import TextBlob
 from flask import Flask,render_template, url_for, request, flash, redirect
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from forms import RegistroForm, EditarForm, CrearCursoForm, EditarCursoForm, CrearReviewForm, CrearActividadForm, EditarActividadForm
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
 
 from config import config
 
@@ -60,13 +68,7 @@ def show_actividad(actividad_id, curso_id):
     if actividad != None:
         curso = ModelCurso.get_by_id(db, curso_id)
         user = ModelUser.get_by_id(db, curso.user_id)
-        actividades = ModelActividad.get_actividades(db, curso_id=curso_id)
-        indice = 0
-        for e in actividades:
-            if e[0] == actividad_id:
-                indice = actividades.index(e)
-                break;
-        return render_template('show-actividad.html', curso=curso, actividad=actividad, user=user, actividades=actividades, indice=indice)
+        return render_template('show-actividad.html', curso=curso, actividad=actividad, user=user)
     else:
         return redirect(url_for('show_curso', curso_id=curso_id))
 
@@ -95,7 +97,7 @@ def perfil(user_id):
 @login_required
 def crear_curso(user_id):
     form = CrearCursoForm() 
-    if form.validate_on_submit() and (ModelUser.get_by_id(user_id).profesor == 1):
+    if form.validate_on_submit() and (ModelUser.get_by_id(db=db, id=user_id).profesor == 1):
         curso = Curso(id=0, user_id=user_id, nombre=form.nombreCurso.data, informacion=form.informacionCurso.data, timecreate=None, timeupdate=None)
         ModelCurso.create(db, curso)
         return redirect(url_for('cursos'))
@@ -135,6 +137,107 @@ def edit_actividad(actividad_id):
     else:
         flash(form.errors)
         return render_template('editar-actividad.html', form=form, actividad=actividad)
+
+
+
+# Ejemplos de texto para cada clase
+# Ejemplos de texto para cada clase
+positivos = [
+    "Me encantó este curso.",
+    "Increíble experiencia de aprendizaje.",
+    "Facilitó mi comprensión del tema.",
+    "Altamente recomendado por su calidad.",
+    "Aprendí mucho y lo disfruté.",
+    "Me siento satisfecho con lo que aprendí.",
+    "Fue muy enriquecedor y motivador.",
+    "Muy bien estructurado y organizado.",
+    "Cumplió con mis expectativas.",
+    "El profesor fue excepcionalmente claro y útil."
+]
+
+negativos = [
+    "No recomendaría este curso a nadie.",
+    "Pésima calidad de enseñanza.",
+    "Fue una pérdida de tiempo y dinero.",
+    "Contenido confuso y poco claro.",
+    "No aprendí nada nuevo.",
+    "No se ajustó a mis expectativas.",
+    "Material desactualizado.",
+    "La plataforma de aprendizaje tuvo problemas constantes.",
+    "El instructor no fue capaz de responder preguntas.",
+    "Mala experiencia, no lo volvería a tomar."
+]
+
+neutros = [
+    "El curso fue aceptable.",
+    "No tengo opiniones fuertes al respecto.",
+    "Fue una experiencia estándar.",
+    "Ni bueno ni malo, simplemente pasable.",
+    "No destacó en particular.",
+    "Se quedó en el término medio.",
+    "Podría haber sido mejor.",
+    "No me dejó una impresión duradera.",
+    "No lo consideraría excepcional ni terrible.",
+    "Simplemente fue un curso normal."
+]
+
+
+# Crear un DataFrame con las listas de ejemplos y las etiquetas
+data = {
+    'Texto': positivos + negativos + neutros,
+    'Sentimiento': ['Positivo'] * len(positivos) + ['Negativo'] * len(negativos) + ['Neutro'] * len(neutros)
+}
+
+df = pd.DataFrame(data)
+
+# Preprocesamiento del texto
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+def preprocesar_texto(texto):
+    tokens = nltk.word_tokenize(texto)
+    stop_words = set(stopwords.words('spanish'))
+    tokens = [word for word in tokens if word.lower() not in stop_words]
+    lemmatizer = WordNetLemmatizer()
+    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    tokens = [word for word in tokens if word.isalpha()]
+    tokens = [word.lower() for word in tokens]
+    return " ".join(tokens)
+
+# Aplica el preprocesamiento y entrena el modelo SVM
+df['Texto_preprocesado'] = df['Texto'].apply(preprocesar_texto)
+
+# Dividir el conjunto de datos en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(df['Texto_preprocesado'], df['Sentimiento'], test_size=0.3, random_state=42, stratify=df['Sentimiento'])
+
+# Vectorización con TF-IDF
+vectorizer = TfidfVectorizer()
+X_train_tfidf = vectorizer.fit_transform(X_train)
+X_test_tfidf = vectorizer.transform(X_test)
+
+# Entrenar el clasificador SVM
+classifier = SVC(kernel='linear', C=1.0)
+classifier.fit(X_train_tfidf, y_train)
+
+# Agrega la función para el análisis de sentimientos
+def analizar_sentimientos(texto):
+    # Preprocesa el texto
+    tokens = nltk.word_tokenize(texto)
+    stop_words = set(stopwords.words('spanish'))
+    tokens = [word for word in tokens if word.lower() not in stop_words]
+    lemmatizer = WordNetLemmatizer()
+    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    tokens = [word for word in tokens if word.isalpha()]
+    tokens = [word.lower() for word in tokens]
+    texto_preprocesado = " ".join(tokens)
+
+    # Vectoriza el texto utilizando el mismo vectorizador TF-IDF que usaste antes
+    texto_vectorizado = vectorizer.transform([texto_preprocesado])
+
+    # Realiza la predicción utilizando el modelo SVM entrenado
+    sentimiento_predicho = classifier.predict(texto_vectorizado)[0]
+
+    return sentimiento_predicho
     
 @app.route('/feedback/<int:curso_id>', methods=['POST', 'GET'])
 def feedback(curso_id):
@@ -146,12 +249,9 @@ def feedback(curso_id):
         nombre = form.nombre.data
         correo = form.correo.data
         informacion = form.informacion.data
-        sentimiento = None 
-        # Realiza el análisis de sentimiento utilizando Amazon Comprehend
-        # Crea una instancia del modelo Review con el sentimiento
-       
-        response = client.detect_sentiment(Text=informacion, LanguageCode='es')
-        sentimiento = response['Sentiment']
+
+        # Realiza el análisis de sentimientos sin AWS
+        sentimiento = analizar_sentimientos(informacion)
 
         #Realiza la deteccion de lenguaje
         response2 = client.detect_dominant_language(Text=informacion)
@@ -163,20 +263,14 @@ def feedback(curso_id):
         print(f"Dominant Language: {dominant_language}")
         print(f"Confidence: {idioma}")
 
-        review = Review(nombre=nombre, correo=correo, informacion=informacion, sentimiento=sentimiento,idioma=dominant_language, curso_id=curso_id)
+        review = Review(nombre=nombre, correo=correo, informacion=informacion, sentimiento=sentimiento, idioma=dominant_language, curso_id=curso_id)
         # Guarda la revisión en la base de datos
         ModelReview.createRev(db, review)
-
-        
-        
 
         flash('Opinión creada exitosamente.')
         return redirect(url_for('index'))
 
-    return render_template('feedback.html', form=form, curso_id=curso_id)
-    
-
-    
+    return render_template('feedback.html', form=form, curso_id=curso_id)    
     
 @app.route('/cursos/<int:curso_id>/edit', methods=['POST', 'GET'])
 @login_required
